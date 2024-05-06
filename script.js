@@ -122,27 +122,22 @@ for (let i = 0; i < formInputs.length; i++) {
 
 
 
-// Assume your navigation links are within a nav element with the id "navbar"
-const navbar = document.querySelector("#navbar");
+const navigationLinks = document.querySelectorAll("[data-nav-link]");
 const pages = document.querySelectorAll("[data-page]");
 
-navbar.addEventListener("click", function(event) {
-    const targetLink = event.target.closest("[data-nav-link]");
-    if (!targetLink) return;  // Click wasn't on a navigation link
+for (let i = 0; i < navigationLinks.length; i++) {
+  navigationLinks[i].addEventListener("click", function () {
 
-    const targetPage = targetLink.innerHTML.toLowerCase();
+    for (let i = 0; i < pages.length; i++) {
+      if (this.innerHTML.toLowerCase() === pages[i].dataset.page) {
+        pages[i].classList.add("active");
+        navigationLinks[i].classList.add("active");
+        window.scrollTo(0, 0);
+      } else {
+        pages[i].classList.remove("active");
+        navigationLinks[i].classList.remove("active");
+      }
+    }
 
-    pages.forEach((page) => {
-        if (targetPage === page.dataset.page) {
-            page.classList.add("active");
-            targetLink.classList.add("active");
-            window.scrollTo(0, 0);
-        } else {
-            page.classList.remove("active");
-            // Use querySelectorAll here to deactivate all links that match
-            document.querySelectorAll(`[data-nav-link="${page.dataset.page}"]`).forEach(link => {
-                link.classList.remove("active");
-            });
-        }
-    });
-});
+  });
+}
