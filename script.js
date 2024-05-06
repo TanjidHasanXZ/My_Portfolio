@@ -1,22 +1,23 @@
 'use strict';
 
-// Function to toggle classes
-const elementToggleFunc = function (elem) {
-  elem.classList.toggle("active");
-};
 
-// Sidebar toggle
+const elementToggleFunc = function (elem) { elem.classList.toggle("active"); }
+
+
+
+
 const sidebar = document.querySelector("[data-sidebar]");
 const sidebarBtn = document.querySelector("[data-sidebar-btn]");
-sidebarBtn.addEventListener("click", function () {
-  elementToggleFunc(sidebar);
-});
 
-// Testimonials modal handling
-const testimonialsItems = document.querySelectorAll("[data-testimonials-item]");
+sidebarBtn.addEventListener("click", function () { elementToggleFunc(sidebar); });
+
+
+
+const testimonialsItem = document.querySelectorAll("[data-testimonials-item]");
 const modalContainer = document.querySelector("[data-modal-container]");
 const modalCloseBtn = document.querySelector("[data-modal-close-btn]");
 const overlay = document.querySelector("[data-overlay]");
+
 
 const modalImg = document.querySelector("[data-modal-img]");
 const modalTitle = document.querySelector("[data-modal-title]");
@@ -25,90 +26,118 @@ const modalText = document.querySelector("[data-modal-text]");
 const testimonialsModalFunc = function () {
   modalContainer.classList.toggle("active");
   overlay.classList.toggle("active");
-};
+}
 
-testimonialsItems.forEach(item => {
-  item.addEventListener("click", function () {
+for (let i = 0; i < testimonialsItem.length; i++) {
+
+  testimonialsItem[i].addEventListener("click", function () {
+
     modalImg.src = this.querySelector("[data-testimonials-avatar]").src;
     modalImg.alt = this.querySelector("[data-testimonials-avatar]").alt;
-    modalTitle.textContent = this.querySelector("[data-testimonials-title]").textContent;
+    modalTitle.innerHTML = this.querySelector("[data-testimonials-title]").innerHTML;
     modalText.innerHTML = this.querySelector("[data-testimonials-text]").innerHTML;
 
     testimonialsModalFunc();
+
   });
-});
+
+}
 
 modalCloseBtn.addEventListener("click", testimonialsModalFunc);
 overlay.addEventListener("click", testimonialsModalFunc);
 
-// Category filter and selection handling
+
+
 const select = document.querySelector("[data-select]");
 const selectItems = document.querySelectorAll("[data-select-item]");
-const selectValue = document.querySelector("[data-select-value]");
-const filterBtns = document.querySelectorAll("[data-filter-btn]");
-const filterItems = document.querySelectorAll("[data-filter-item]");
+const selectValue = document.querySelector("[data-selecct-value]");
+const filterBtn = document.querySelectorAll("[data-filter-btn]");
 
-select.addEventListener("click", function () {
-  elementToggleFunc(select);
-});
+select.addEventListener("click", function () { elementToggleFunc(this); });
 
-selectItems.forEach(item => {
-  item.addEventListener("click", function () {
-    let selectedValue = this.textContent.toLowerCase();
-    selectValue.textContent = this.textContent;
+for (let i = 0; i < selectItems.length; i++) {
+  selectItems[i].addEventListener("click", function () {
+
+    let selectedValue = this.innerText.toLowerCase();
+    selectValue.innerText = this.innerText;
     elementToggleFunc(select);
     filterFunc(selectedValue);
+
   });
-});
+}
+
+const filterItems = document.querySelectorAll("[data-filter-item]");
 
 const filterFunc = function (selectedValue) {
-  filterItems.forEach(item => {
-    if (selectedValue === "all" || item.dataset.category === selectedValue) {
-      item.classList.add("active");
-    } else {
-      item.classList.remove("active");
-    }
-  });
-};
 
-let lastClickedBtn = filterBtns[0];
-filterBtns.forEach(btn => {
-  btn.addEventListener("click", function () {
-    let selectedValue = this.textContent.toLowerCase();
+  for (let i = 0; i < filterItems.length; i++) {
+
+    if (selectedValue === "all") {
+      filterItems[i].classList.add("active");
+    } else if (selectedValue === filterItems[i].dataset.category) {
+      filterItems[i].classList.add("active");
+    } else {
+      filterItems[i].classList.remove("active");
+    }
+
+  }
+
+}
+
+let lastClickedBtn = filterBtn[0];
+
+for (let i = 0; i < filterBtn.length; i++) {
+
+  filterBtn[i].addEventListener("click", function () {
+
+    let selectedValue = this.innerText.toLowerCase();
+    selectValue.innerText = this.innerText;
     filterFunc(selectedValue);
 
     lastClickedBtn.classList.remove("active");
     this.classList.add("active");
     lastClickedBtn = this;
-  });
-});
 
-// Form validation and submission handling
+  });
+
+}
+
+
+
 const form = document.querySelector("[data-form]");
 const formInputs = document.querySelectorAll("[data-form-input]");
 const formBtn = document.querySelector("[data-form-btn]");
 
-formInputs.forEach(input => {
-  input.addEventListener("input", function () {
-    formBtn.disabled = !form.checkValidity();
-  });
-});
+for (let i = 0; i < formInputs.length; i++) {
+  formInputs[i].addEventListener("input", function () {
 
-// Navigation links and page handling
+    if (form.checkValidity()) {
+      formBtn.removeAttribute("disabled");
+    } else {
+      formBtn.setAttribute("disabled", "");
+    }
+
+  });
+}
+
+
+
 const navigationLinks = document.querySelectorAll("[data-nav-link]");
 const pages = document.querySelectorAll("[data-page]");
 
-navigationLinks.forEach((link, index) => {
-  link.addEventListener("click", function () {
-    pages.forEach((page, pageIndex) => {
-      if (pageIndex === index) {
-        page.classList.add("active");
-        navigationLinks[pageIndex].classList.add("active");
-      } else {
-        page.classList.remove("active");
-        navigationLinks[pageIndex].classList.remove("active");
-      }
-    });
-  });
-});
+for (let i = 0; i < navigationLinks.length; i++) {
+  navigationLinks[i].addEventListener("click", function () {
 
+    for (let i = 0; i < pages.length; i++) {
+      if (this.innerHTML.toLowerCase() === pages[i].dataset.page) {
+        pages[i].classList.add("active");
+        navigationLinks[i].classList.add("active");
+        window.scrollTo(0, 0);
+      } else {
+        pages[i].classList.remove("active");
+        navigationLinks[i].classList.remove("active");
+      }
+    }
+
+  });
+}
